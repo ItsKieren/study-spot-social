@@ -43,7 +43,7 @@ export const supabase = supabaseInstance !== null && !initializationError
   : (() => { // Otherwise, create and return the mock
       console.warn(`supabase.ts: Using MOCK Supabase client. Reason: ${initializationError || 'Unknown initialization issue.'}`);
       const mockMessage = initializationError || 'Supabase not configured';
-      const mockError = { name: 'ConfigError', message: mockMessage };
+      const mockError = { name: 'ConfigError', message: mockMessage, status: 500 }; // Added status for mock error
       // Return a mock object that prevents crashes
       const mockSupabase = {
         auth: {
@@ -57,16 +57,31 @@ export const supabase = supabaseInstance !== null && !initializationError
         },
         from: (table: string) => {
           console.warn(`Mock Supabase: from('${table}') called`);
-          const tableError = { message: `Mock Supabase: ${mockMessage} (table: ${table})`, details: '', hint: '', code: 'MOCK' };
+          const tableError = { message: `Mock Supabase: ${mockMessage} (table: ${table})`, details: '', hint: '', code: 'MOCK', status: 500 }; // Added status
           return ({
-            select: async () => ({ data: null, error: tableError }),
-            insert: async () => ({ data: null, error: tableError }),
-            update: async () => ({ data: null, error: tableError }),
-            delete: async () => ({ data: null, error: tableError }),
-            eq: () => mockSupabase.from(table),
-            single: () => Promise.resolve({ data: null, error: tableError })
+            select: async () => ({ data: null, error: tableError, status: 500, count: null }), // Added status/count
+            insert: async () => ({ data: null, error: tableError, status: 500, count: null }), // Added status/count
+            update: async () => ({ data: null, error: tableError, status: 500, count: null }), // Added status/count
+            delete: async () => ({ data: null, error: tableError, status: 500, count: null }), // Added status/count
+            eq: () => mockSupabase.from(table), // Mock chaining
+            // Add other common chaining methods if needed for type safety elsewhere
+            order: () => mockSupabase.from(table),
+            limit: () => mockSupabase.from(table),
+            single: () => Promise.resolve({ data: null, error: tableError, status: 500, count: null }) // Added status/count
           })
         },
+        // Add other top-level Supabase modules if needed
+        storage: {
+            from: (bucket: string) => {
+                 console.warn(`Mock Supabase: storage.from('${bucket}') called`);
+                 const storageError = { message: `Mock Supabase Storage: ${mockMessage} (bucket: ${bucket})`, name: 'StorageConfigError', status: 500 };
+                 return ({
+                     upload: async () => ({ data: null, error: storageError }),
+                     download: async () => ({ data: null, error: storageError }),
+                     // Add other methods
+                 });
+            }
+        }
       };
-      return mockSupabase as any;
+      return mockSupabase as any; // Cast to any to avoid extensive mocking types
     })();

@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { FcGoogle } from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc"; // Keep Google Icon
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,7 +34,8 @@ const Navbar = () => {
     const [password, setPassword] = useState("");
     const [authActionLoading, setAuthActionLoading] = useState<string | null>(null);
 
-    const { user, signOut, signIn, signUp, signInWithGoogle, loading: authLoadingGlobal } = useAuth();
+    // Use useAuth hook which now contains signInWithProvider
+    const { user, signOut, signIn, signUp, signInWithProvider, loading: authLoadingGlobal } = useAuth();
     const { toast } = useToast();
     const navigate = useNavigate();
 
@@ -43,7 +44,8 @@ const Navbar = () => {
         const { error } = await signOut();
         if (error) {
             console.error("Sign Out Error:", error);
-            toast({ title: "Sign Out Error", description: error.message || "Failed to sign out.", variant: "destructive" });
+            // --- MODIFIED TOAST ---
+            toast({ title: "Sign Out Error", description: `Failed to sign out: ${error.message}`, variant: "destructive" });
         } else {
             toast({ title: "Signed Out", description: "You have been successfully signed out." });
             navigate("/");
@@ -57,10 +59,12 @@ const Navbar = () => {
         const { error } = await signIn(email, password);
         if (error) {
             console.error("Sign In Error:", error);
-            toast({ title: "Sign In Error", description: error.message || "Invalid email or password.", variant: "destructive" });
+             // --- MODIFIED TOAST ---
+            toast({ title: "Sign In Error", description: `Invalid email or password: ${error.message}`, variant: "destructive" });
         } else {
             toast({ title: "Signed In", description: "Welcome back!" });
             setIsSignInOpen(false);
+            // Auth state change will handle UI update via listener
         }
         setAuthActionLoading(null);
     };
@@ -71,24 +75,36 @@ const Navbar = () => {
         const { error } = await signUp(email, password);
         if (error) {
             console.error("Sign Up Error:", error);
-            toast({ title: "Sign Up Error", description: error.message || "Could not create account.", variant: "destructive" });
+            // --- MODIFIED TOAST ---
+            toast({ title: "Sign Up Error", description: `Could not create account: ${error.message}`, variant: "destructive" });
         } else {
             toast({ title: "Sign Up Successful", description: "Please check your email to verify your account." });
             setIsSignUpOpen(false);
+             // Clear fields after successful sign-up attempt
+             setEmail("");
+             setPassword("");
         }
         setAuthActionLoading(null);
     };
 
+    // Google Sign In Handler
     const handleGoogleSignIn = async () => {
         setAuthActionLoading("google");
-        const { error } = await signInWithGoogle();
+        // Call signInWithProvider from useAuth with 'google'
+        const { error } = await signInWithProvider('google');
         if (error) {
             console.error("Google Sign In Error:", error);
-            toast({ title: "Google Sign In Error", description: error.message || "Could not sign in with Google.", variant: "destructive" });
-            setAuthActionLoading(null);
+            // --- MODIFIED TOAST ---
+            toast({ title: "Google Sign In Error", description: `Could not sign in with Google: ${error.message}`, variant: "destructive" });
+        } else {
+             // Close modals on successful initiation (listener handles actual login)
+             setIsSignInOpen(false);
+             setIsSignUpOpen(false);
         }
-        // Success handled by onAuthStateChange
+        // Loading state will be reset by the auth listener or if there's an error here
+        setAuthActionLoading(null); // Reset loading state here for Google specifically if error occurs
     };
+
 
     const closeMobileMenu = () => setIsMenuOpen(false);
 
@@ -230,6 +246,7 @@ const Navbar = () => {
                         <DialogDescription className="text-muted-foreground text-center text-sm">Access your StudySpace account.</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 px-4 py-6">
+                        {/* --- MODIFIED Google Button --- */}
                         <Button variant="outline" className="w-full border-border hover:bg-secondary group" onClick={handleGoogleSignIn} disabled={isLoading("google")}>
                             {isLoading("google") ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FcGoogle className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />} Continue with Google
                         </Button>
@@ -250,6 +267,7 @@ const Navbar = () => {
                         <DialogDescription className="text-muted-foreground text-center text-sm">Join StudySpace today.</DialogDescription>
                     </DialogHeader>
                      <div className="space-y-4 px-4 py-6">
+                         {/* --- MODIFIED Google Button --- */}
                         <Button variant="outline" className="w-full border-border hover:bg-secondary group" onClick={handleGoogleSignIn} disabled={isLoading("google")}>{isLoading("google") ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FcGoogle className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />}Sign up with Google</Button>
                          <div className="relative my-4"><div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border"></span></div><div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">Or sign up with email</span></div></div>
                         <form onSubmit={handleSignUp} className="space-y-4">
