@@ -2,8 +2,6 @@
 
 A web app that helps users find ideal study locations nearby — powered by the Google Maps API.
 
-![App Screenshot](screenshot.png)
-*Click the image above to try the live demo!*
 
 ---
 
@@ -17,7 +15,7 @@ Built to help students and remote workers easily find the perfect environment fo
 
 ## 🚀 Live Demo
 
-Try it here: [https://your-deployment-link.vercel.app](https://your-deployment-link.vercel.app)
+Try it here: [https://studyspaces-five.vercel.app/](https://studyspaces-five.vercel.app/)
 
 ---
 
@@ -62,8 +60,7 @@ Try it here: [https://your-deployment-link.vercel.app](https://your-deployment-l
 
 ## 👤 Author
 
-**Your Name** – [your-github-link](https://github.com/yourusername)
+** Alessandro Garcia, Kieren Armas, Trevor Ngo, and Taj Raysun ** – 
 ---
 ## 📄 License
-This project is licensed under the MIT License.
-Feel free to use, modify, and build upon it!
+This project was made for FullyHacks 2025!
