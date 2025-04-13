@@ -7,24 +7,26 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "bundler", // Correct for Vite
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react-jsx", // Correct for modern React/Vite
 
-    /* Linting */
+    /* Linting - Again, consider stricter settings later */
     "strict": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
 
+    // Alias config - this inherits from the root tsconfig.json usually,
+    // but explicitly adding it here won't hurt.
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"] // This correctly tells TS to check files in src
 }
