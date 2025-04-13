@@ -35,10 +35,11 @@ Try it here: [https://your-deployment-link.vercel.app](https://your-deployment-l
 
 - **HTML5 & CSS3** – Page structure and responsive styling.
 - **JavaScript (ES6+)** – App logic, fetch, and event handling.
+- **TypeScript** – Most App Logic.
 - **Google Maps JavaScript API** – Embeds interactive map.
 - **Google Places API** – Fetches nearby places.
 - **Geolocation API** – Detects user's current position.
-- **Deployment** – Vercel or Netlify.
+- **Deployment** – Vercel.
 
 ---
 
