@@ -1,4 +1,4 @@
-# 📍 Study Spots Finder
+# 📍 StudySpace
 
 A web app that helps users find ideal study locations nearby — powered by the Google Maps API.
 
@@ -7,7 +7,7 @@ A web app that helps users find ideal study locations nearby — powered by the 
 
 ## 🧠 Description
 
-**Study Spots Finder** is a web-based application that allows users to search for nearby quiet, productive places to study such as coffee shops, libraries, and study lounges. It uses the **Google Maps Places API** and **Geolocation API** to fetch and display results based on the user's current location.
+**StudySpaces** is a web-based application that allows users to search for nearby quiet, productive places to study such as coffee shops, libraries, and study lounges. It uses the **Google Maps Places API** and **Geolocation API** to fetch and display results based on the user's current location.
 
 Built to help students and remote workers easily find the perfect environment for focus and productivity.
 
